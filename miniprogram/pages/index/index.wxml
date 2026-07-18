@@ -1,0 +1,154 @@
+<view class="page-wrap">
+  <!-- Hero 区 -->
+  <view class="hero">
+    <view class="hero-card">
+      <view class="brand-row">
+        <view class="brand">
+          <view class="logo">🫠</view>
+          <view class="brand-text">
+            <view class="brand-name">累了么</view>
+            <view class="brand-sub">你的碎片时间搭子</view>
+          </view>
+        </view>
+        <view class="weather-pill">{{weekday}}</view>
+      </view>
+      <view class="greeting">
+        <view class="greeting-text">{{greeting || home.greeting}}</view>
+        <view class="greeting-sub">搜点新鲜的，或者随便逛逛。</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-wrap" bindtap="onTapSearch">
+    <view class="search-box">
+      <text class="search-icon">⌕</text>
+      <view class="search-placeholder">搜热搜、爆款文案、AI 工具…</view>
+      <view class="search-btn">搜索</view>
+    </view>
+  </view>
+
+  <!-- 热门搜索词 -->
+  <scroll-view class="hot-tags" scroll-x enable-flex wx:if="{{home && home.hotKeywords.length}}">
+    <view
+      wx:for="{{home.hotKeywords}}"
+      wx:key="keyword"
+      class="tag"
+      data-keyword="{{item.keyword}}"
+      bindtap="onTapHotKeyword"
+      hover-class="tag-hover"
+    >
+      <text wx:if="{{item.icon}}">{{item.icon}} </text>{{item.displayName || item.keyword}}
+    </view>
+  </scroll-view>
+
+  <!-- 加载态 -->
+  <loading wx:if="{{loading && !home}}" text="正在为你准备内容…"></loading>
+
+  <!-- 错误态 -->
+  <error-state
+    wx:if="{{error && !home}}"
+    title="加载失败"
+    desc="{{error}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <block wx:if="{{home}}">
+    <!-- 场景入口 -->
+    <view class="section" wx:if="{{home.sceneEntries.length}}">
+      <view class="section-title">
+        <text class="title">今天想做什么</text>
+        <text class="sub">跟着感觉走</text>
+      </view>
+      <view class="mood-grid">
+        <view
+          wx:for="{{home.sceneEntries}}"
+          wx:key="code"
+          class="mood mood-{{index + 1}}"
+          data-keyword="{{item.searchKeyword}}"
+          bindtap="onTapScene"
+          hover-class="mood-hover"
+        >
+          <view class="mood-ico">{{item.icon}}</view>
+          <view class="mood-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 今日推荐 -->
+    <view class="section" wx:if="{{home.todayRecommendations.length}}">
+      <view class="section-title">
+        <text class="title">今日推荐</text>
+        <text class="sub">每天都有新东西</text>
+      </view>
+      <scroll-view class="cards" scroll-x enable-flex>
+        <view
+          wx:for="{{home.todayRecommendations}}"
+          wx:key="id"
+          class="feature-card feature-{{index + 1}}"
+          data-id="{{item.id}}"
+          bindtap="onTapRecommend"
+          hover-class="feature-hover"
+        >
+          <view class="feature-arrow">→</view>
+          <view class="feature-tag">{{item.sourceName || '推荐'}}</view>
+          <view class="feature-title">{{item.title}}</view>
+          <view class="feature-desc">{{item.summary}}</view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 人群入口 -->
+    <view class="section" wx:if="{{home.audiences.length}}">
+      <view class="section-title">
+        <text class="title">为你准备的入口</text>
+        <text class="sub">不同人群，不同内容</text>
+      </view>
+      <view class="audience-grid">
+        <view
+          wx:for="{{home.audiences}}"
+          wx:key="id"
+          class="audience audience-{{index + 1}}"
+          data-name="{{item.name}}"
+          bindtap="onTapAudience"
+          hover-class="audience-hover"
+        >
+          <view class="a-icon">{{index === 0 ? '💼' : index === 1 ? '🎬' : index === 2 ? '👩‍👧' : '🎓'}}</view>
+          <view class="a-name">{{item.name}}</view>
+          <view class="a-desc">{{item.description}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 随机建议 -->
+    <view class="section" wx:if="{{randomTip}}">
+      <view class="random-card">
+        <view class="dice {{tipRefreshing ? 'dice-spin' : ''}}">🎲</view>
+        <view class="random-content">
+          <view class="random-small">累了，不想做决定？</view>
+          <view class="random-title">{{randomTip.title}}</view>
+          <view class="random-desc">{{randomTip.summary}}</view>
+          <button class="random-btn" bindtap="refreshTip" hover-class="btn-hover">帮我换一个</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 猜你喜欢 -->
+    <view class="section" wx:if="{{home.guessYouLike.length}}">
+      <view class="section-title">
+        <text class="title">猜你喜欢</text>
+        <text class="sub">根据热门内容推荐</text>
+      </view>
+      <view class="feed">
+        <content-card
+          wx:for="{{home.guessYouLike}}"
+          wx:key="id"
+          item="{{item}}"
+          position="{{index}}"
+          bind:tap="onContentTap"
+        ></content-card>
+      </view>
+    </view>
+  </block>
+  <view class="tabbar-safe-space"></view>
+</view>

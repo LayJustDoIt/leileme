@@ -1,0 +1,242 @@
+.page-wrap {
+  min-height: 100vh;
+  padding-bottom: 0;
+}
+
+/* Hero */
+.hero {
+  padding: 32rpx 32rpx 16rpx;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #6c63ff 0%, #8274ff 52%, #a190ff 100%);
+  border-radius: 40rpx;
+  padding: 36rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  box-shadow: 0 24rpx 48rpx rgba(108, 99, 255, 0.24);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::after {
+  content: '';
+  position: absolute;
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  right: -100rpx;
+  bottom: -120rpx;
+}
+
+.avatar {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56rpx;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+  z-index: 1;
+}
+
+.nickname {
+  font-size: 34rpx;
+  font-weight: 800;
+  margin-bottom: 6rpx;
+}
+
+.sub {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.login-btn {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999rpx;
+  padding: 14rpx 28rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  z-index: 1;
+}
+
+/* 随机建议 */
+.tip-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  border: 1rpx solid var(--line);
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+}
+
+.tip-emoji {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #efedff, #e8f9f2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  flex-shrink: 0;
+}
+
+.tip-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.tip-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tip-desc {
+  font-size: 22rpx;
+  color: var(--muted);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 菜单 */
+.menu-list {
+  background: #fff;
+  border-radius: 28rpx;
+  border: 1rpx solid var(--line);
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.menu-item:last-child {
+  border-bottom: 0;
+}
+
+.menu-hover {
+  background: #fafafe;
+}
+
+.menu-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 20rpx;
+  background: var(--brand-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.menu-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  margin-bottom: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-desc {
+  font-size: 22rpx;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-soon {
+  background: var(--brand-light);
+  color: var(--brand);
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.menu-arrow {
+  color: #b2b6c0;
+  font-size: 32rpx;
+}
+
+/* 开发信息 */
+.dev-card {
+  background: #fff;
+  border-radius: 24rpx;
+  border: 1rpx solid var(--line);
+  padding: 20rpx 28rpx;
+}
+
+.dev-row {
+  display: flex;
+  align-items: center;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid rgba(236, 238, 244, 0.6);
+}
+
+.dev-row:last-child {
+  border-bottom: 0;
+}
+
+.dev-label {
+  width: 120rpx;
+  font-size: 24rpx;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.dev-value {
+  flex: 1;
+  font-size: 24rpx;
+  color: var(--text);
+  font-family: -apple-system, monospace;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 60rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+}
+
+/* TabBar 安全区占位，避免最后一张卡片被原生 TabBar 遮挡 */
+.tabbar-safe-space {
+  width: 100%;
+  height: calc(180rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leileme.content.mapper.ContentMapper">
+
+    <select id="selectSearchPage" resultType="com.leileme.search.mapper.model.SearchContentRow">
+        SELECT
+            c.id, c.content_type, c.category_id, c.title, c.summary, c.cover_url,
+            c.source_name, c.hot_score, c.view_count, c.favorite_count, c.published_at,
+            (
+                CASE
+                    WHEN LOWER(c.title) = #{keyword} THEN 200
+                    WHEN LOWER(c.title) LIKE CONCAT(#{keyword}, '%') THEN 150
+                    WHEN LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%') THEN 100
+                    ELSE 0
+                END
+                + CASE WHEN LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 70 ELSE 0 END
+                + CASE WHEN LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 40 ELSE 0 END
+                + CASE WHEN c.is_top = 1 THEN 30 ELSE 0 END
+                + LEAST(c.hot_score, 100)
+            ) AS relevance_score
+        FROM content c
+        LEFT JOIN content_category cc ON cc.id = c.category_id
+        WHERE c.status = 1
+          AND c.published_at &lt;= NOW()
+          <if test="contentType != null and contentType != ''">
+              AND c.content_type = #{contentType}
+          </if>
+          <if test="categoryId != null">
+              AND c.category_id = #{categoryId}
+          </if>
+          AND (
+              LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%')
+              OR LOWER(COALESCE(c.subtitle, '')) LIKE CONCAT('%', #{keyword}, '%')
+              OR LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%')
+              OR LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%')
+              OR LOWER(COALESCE(cc.category_name, '')) LIKE CONCAT('%', #{keyword}, '%')
+              OR EXISTS (
+                  SELECT 1
+                  FROM content_tag_relation ctr
+                  JOIN content_tag ct ON ct.id = ctr.tag_id AND ct.status = 1
+                  WHERE ctr.content_id = c.id
+                    AND LOWER(ct.tag_name) LIKE CONCAT('%', #{keyword}, '%')
+              )
+          )
+        ORDER BY relevance_score DESC, c.published_at DESC
+    </select>
+
+    <select id="selectTagNames" resultType="java.lang.String">
+        SELECT ct.tag_name
+        FROM content_tag_relation ctr
+        JOIN content_tag ct ON ct.id = ctr.tag_id
+        WHERE ctr.content_id = #{contentId} AND ct.status = 1
+        ORDER BY ct.use_count DESC, ct.id ASC
+    </select>
+
+    <select id="selectRelated" resultType="com.leileme.content.entity.Content">
+        SELECT *
+        FROM content
+        WHERE status = 1
+          AND category_id = #{categoryId}
+          AND id != #{excludeId}
+          AND published_at &lt;= NOW()
+        ORDER BY hot_score DESC, published_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <update id="incrementViewCount">
+        UPDATE content SET view_count = view_count + 1 WHERE id = #{id}
+    </update>
+</mapper>

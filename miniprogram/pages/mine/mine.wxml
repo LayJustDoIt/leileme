@@ -1,0 +1,77 @@
+<view class="page-wrap">
+  <!-- 用户头部 -->
+  <view class="hero">
+    <view class="hero-card">
+      <view class="avatar">🫠</view>
+      <view class="user-info">
+        <view class="nickname">访客用户</view>
+        <view class="sub">登录功能即将上线</view>
+      </view>
+      <view class="login-btn">登录</view>
+    </view>
+  </view>
+
+  <!-- 随机建议 -->
+  <view class="section" wx:if="{{randomTip}}">
+    <view class="section-title">
+      <text class="title">今天的小建议</text>
+      <text class="sub" bindtap="onRefreshTip">换一个</text>
+    </view>
+    <view class="tip-card">
+      <view class="tip-emoji">🎲</view>
+      <view class="tip-content">
+        <view class="tip-title">{{randomTip.title}}</view>
+        <view class="tip-desc" wx:if="{{randomTip.summary}}">{{randomTip.summary}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="section">
+    <view class="section-title">
+      <text class="title">更多</text>
+    </view>
+    <view class="menu-list">
+      <view
+        wx:for="{{menuList}}"
+        wx:key="key"
+        class="menu-item"
+        data-key="{{item.key}}"
+        bindtap="onMenuTap"
+        hover-class="menu-hover"
+      >
+        <view class="menu-icon">{{item.icon}}</view>
+        <view class="menu-main">
+          <view class="menu-label">{{item.label}}</view>
+          <view class="menu-desc">{{item.desc}}</view>
+        </view>
+        <view class="menu-soon" wx:if="{{item.soon}}">敬请期待</view>
+        <view class="menu-arrow">›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 调试信息（开发期可隐藏） -->
+  <view class="section">
+    <view class="section-title">
+      <text class="title">开发信息</text>
+    </view>
+    <view class="dev-card">
+      <view class="dev-row">
+        <text class="dev-label">环境</text>
+        <text class="dev-value">{{envName}}</text>
+      </view>
+      <view class="dev-row">
+        <text class="dev-label">API</text>
+        <text class="dev-value ellipsis-1">{{apiBase}}</text>
+      </view>
+      <view class="dev-row">
+        <text class="dev-label">Session</text>
+        <text class="dev-value ellipsis-1" bindtap="onCopySession">{{sessionId}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">累了么 V1 · 公益向内容工具</view>
+  <view class="tabbar-safe-space"></view>
+</view>

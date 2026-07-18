@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "累了么",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "content-card": "/components/content-card/content-card",
+    "loading": "/components/loading/loading",
+    "empty": "/components/empty/empty",
+    "error-state": "/components/error-state/error-state"
+  }
+}

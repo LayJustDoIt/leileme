@@ -1,0 +1,116 @@
+.page-wrap {
+  min-height: 100vh;
+  padding-bottom: 0;
+}
+
+/* 顶部分类 */
+.cat-bar {
+  white-space: nowrap;
+  padding: 20rpx 32rpx 16rpx;
+  background: var(--bg);
+}
+
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-right: 16rpx;
+  padding: 14rpx 26rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  border: 1rpx solid var(--line);
+  font-size: 26rpx;
+  color: #555d6d;
+}
+
+.cat-pill.active {
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8rpx 18rpx rgba(108, 99, 255, 0.24);
+}
+
+.cat-hover {
+  transform: scale(0.96);
+}
+
+.cat-emoji {
+  font-size: 28rpx;
+}
+
+/* 当前分类描述 */
+.cat-desc {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin: 12rpx 32rpx 24rpx;
+  padding: 28rpx 32rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  border: 1rpx solid var(--line);
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+}
+
+.cat-desc-bg {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  flex-shrink: 0;
+}
+
+.cat-desc-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-desc-name {
+  font-size: 32rpx;
+  font-weight: 800;
+  margin-bottom: 6rpx;
+}
+
+.cat-desc-detail {
+  font-size: 24rpx;
+  color: var(--muted);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 列表 */
+.feed-wrap {
+  padding: 8rpx 32rpx 0;
+}
+
+.result-meta {
+  font-size: 24rpx;
+  color: var(--muted);
+  margin-bottom: 20rpx;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+/* TabBar 安全区占位，避免最后一张卡片被原生 TabBar 遮挡 */
+.tabbar-safe-space {
+  width: 100%;
+  height: calc(180rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}

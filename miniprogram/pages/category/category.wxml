@@ -1,0 +1,73 @@
+<view class="page-wrap">
+  <!-- 顶部分类切换 -->
+  <scroll-view class="cat-bar" scroll-x enable-flex wx:if="{{categories.length > 0}}">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="cat-pill {{activeId === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onCategoryTap"
+      hover-class="cat-hover"
+    >
+      <text class="cat-emoji">{{item._icon}}</text>
+      <text class="cat-name">{{item.name}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 当前分类描述 -->
+  <view class="cat-desc" wx:if="{{categories.length > 0}}">
+    <block wx:for="{{categories}}" wx:key="id">
+      <block wx:if="{{activeId === item.id}}">
+        <view class="cat-desc-bg" style="background:{{item._bg}};">{{item._icon}}</view>
+        <view class="cat-desc-text">
+          <view class="cat-desc-name">{{item.name}}</view>
+          <view class="cat-desc-detail" wx:if="{{item.description}}">{{item.description}}</view>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <!-- 加载 -->
+  <loading wx:if="{{loading}}" text="加载分类…"></loading>
+
+  <!-- 错误 -->
+  <error-state
+    wx:if="{{error && categories.length === 0}}"
+    title="分类加载失败"
+    desc="{{error}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <!-- 列表错误 -->
+  <error-state
+    wx:if="{{listError && list.length === 0 && !loadingMore}}"
+    title="内容加载失败"
+    desc="{{listError}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <!-- 列表空 -->
+  <empty
+    wx:if="{{!loading && !error && !listError && list.length === 0 && categories.length > 0}}"
+    icon="📂"
+    title="该分类下暂无内容"
+    desc="看看其他分类吧"
+  ></empty>
+
+  <!-- 内容列表 -->
+  <view class="feed-wrap" wx:if="{{list.length > 0}}">
+    <view class="result-meta">共 {{total}} 条</view>
+    <view class="feed">
+      <content-card
+        wx:for="{{list}}"
+        wx:key="id"
+        item="{{item}}"
+        position="{{index}}"
+        bind:tap="onContentTap"
+      ></content-card>
+    </view>
+    <loading wx:if="{{loadingMore}}" text="加载更多…"></loading>
+    <view wx:if="{{!hasNext && list.length > 0}}" class="no-more">已经到底啦</view>
+  </view>
+  <view class="tabbar-safe-space"></view>
+</view>

@@ -1,0 +1,122 @@
+.item {
+  display: flex;
+  gap: 22rpx;
+  align-items: center;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 32rpx;
+  border: 1rpx solid var(--line);
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+}
+
+.item-hover {
+  transform: scale(0.98);
+  background: #fafafe;
+}
+
+.thumb {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 24rpx;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 无封面默认封面容器 */
+.thumb-default {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.thumb-emoji {
+  font-size: 52rpx;
+  line-height: 1;
+}
+
+.thumb-type {
+  font-size: 18rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+/* 5 种内容类型默认封面渐变 */
+.cover-hot {
+  background: linear-gradient(135deg, #ff7c67, #ff9c66);
+}
+
+.cover-copy {
+  background: linear-gradient(135deg, #ff9f43, #ffbf6b);
+}
+
+.cover-tool {
+  background: linear-gradient(135deg, #547cff, #7e8fff);
+}
+
+.cover-guide {
+  background: linear-gradient(135deg, #20b486, #4fd0a2);
+}
+
+.cover-random {
+  background: linear-gradient(135deg, #8b7dff, #a190ff);
+}
+
+.cover-default {
+  background: linear-gradient(135deg, #b2b6c0, #d0d4dc);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text);
+  margin-bottom: 10rpx;
+}
+
+.summary {
+  font-size: 24rpx;
+  color: var(--muted);
+  margin-bottom: 14rpx;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
+.type-pill {
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.meta-text {
+  font-size: 22rpx;
+}
+
+.meta-dot {
+  color: var(--muted);
+}

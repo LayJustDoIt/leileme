@@ -1,0 +1,8 @@
+<view class="loading {{fullscreen ? 'fullscreen' : ''}}">
+  <view class="dots">
+    <view class="dot d1"></view>
+    <view class="dot d2"></view>
+    <view class="dot d3"></view>
+  </view>
+  <text class="loading-text">{{text}}</text>
+</view>

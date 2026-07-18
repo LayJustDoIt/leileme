@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#f6f7fb" />
+  <title>累了么 · 高保真首页原型</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#171a22;
+      --muted:#7b8190;
+      --line:#eceef4;
+      --brand:#6c63ff;
+      --brand2:#8b7dff;
+      --green:#22b573;
+      --orange:#ff9f43;
+      --pink:#ff6b9d;
+      --blue:#4d8dff;
+      --shadow:0 12px 36px rgba(33,38,58,.08);
+      --soft-shadow:0 8px 24px rgba(33,38,58,.06);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif}
+    body{min-height:100vh}
+    button,input{font:inherit}
+    button{border:0;cursor:pointer}
+    .app{
+      width:min(430px,100%);
+      min-height:100vh;
+      margin:0 auto;
+      background:
+        radial-gradient(circle at 85% -10%, rgba(108,99,255,.18), transparent 30%),
+        radial-gradient(circle at -20% 22%, rgba(34,181,115,.12), transparent 24%),
+        var(--bg);
+      position:relative;
+      overflow-x:hidden;
+      padding-bottom:100px;
+    }
+    .safe{height:12px}
+    .hero{
+      padding:20px 20px 10px;
+    }
+    .hero-card{
+      background:linear-gradient(135deg,#6c63ff 0%,#8274ff 52%,#a190ff 100%);
+      border-radius:30px;
+      padding:22px;
+      color:#fff;
+      box-shadow:0 18px 42px rgba(108,99,255,.28);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card:before,.hero-card:after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.13);
+    }
+    .hero-card:before{width:150px;height:150px;right:-55px;top:-72px}
+    .hero-card:after{width:84px;height:84px;right:56px;bottom:-46px}
+    .brand-row{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{
+      width:44px;height:44px;border-radius:15px;background:rgba(255,255,255,.2);
+      display:grid;place-items:center;font-size:24px;backdrop-filter:blur(10px)
+    }
+    .brand-name{font-size:19px;font-weight:800;letter-spacing:.5px}
+    .weather-pill{
+      padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.16);
+      font-size:12px;backdrop-filter:blur(10px)
+    }
+    .greeting{position:relative;z-index:1;margin-top:26px}
+    .greeting h1{font-size:28px;line-height:1.28;margin:0;font-weight:850}
+    .greeting p{margin:9px 0 0;color:rgba(255,255,255,.82);font-size:14px}
+    .search-wrap{padding:0 20px;margin-top:-2px;position:relative;z-index:3}
+    .search-box{
+      height:58px;background:#fff;border-radius:20px;display:flex;align-items:center;
+      gap:10px;padding:0 14px;box-shadow:var(--shadow);border:1px solid rgba(108,99,255,.08)
+    }
+    .search-icon{font-size:21px}
+    .search-box input{
+      flex:1;border:0;outline:0;background:transparent;color:var(--text);font-size:15px;min-width:0
+    }
+    .search-btn{
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      color:#fff;border-radius:14px;padding:10px 15px;font-size:13px;font-weight:700;
+      box-shadow:0 8px 18px rgba(108,99,255,.24)
+    }
+    .hot-tags{
+      padding:13px 20px 2px;display:flex;gap:8px;overflow:auto;scrollbar-width:none
+    }
+    .hot-tags::-webkit-scrollbar{display:none}
+    .tag{
+      flex:0 0 auto;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.9);
+      border:1px solid var(--line);font-size:12px;color:#555d6d
+    }
+    .section{padding:20px 20px 0}
+    .section-title{
+      display:flex;align-items:end;justify-content:space-between;margin-bottom:13px
+    }
+    .section-title h2{font-size:19px;margin:0;font-weight:850}
+    .section-title span{font-size:12px;color:var(--muted)}
+    .mood-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px
+    }
+    .mood{
+      background:#fff;border-radius:18px;padding:14px 5px 11px;text-align:center;
+      box-shadow:var(--soft-shadow);border:1px solid rgba(236,238,244,.9);
+      transition:.18s transform
+    }
+    .mood:active{transform:scale(.96)}
+    .mood .ico{
+      width:42px;height:42px;border-radius:14px;margin:0 auto 9px;display:grid;place-items:center;font-size:21px
+    }
+    .mood:nth-child(1) .ico{background:#fff3e5}
+    .mood:nth-child(2) .ico{background:#eaf2ff}
+    .mood:nth-child(3) .ico{background:#e8faf2}
+    .mood:nth-child(4) .ico{background:#f0edff}
+    .mood:nth-child(5) .ico{background:#fff0f5}
+    .mood b{font-size:12px}
+    .cards{
+      display:flex;gap:12px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px;scrollbar-width:none
+    }
+    .cards::-webkit-scrollbar{display:none}
+    .feature-card{
+      min-width:252px;height:150px;border-radius:24px;padding:18px;color:#fff;
+      position:relative;overflow:hidden;scroll-snap-align:start;box-shadow:var(--soft-shadow)
+    }
+    .feature-card:after{
+      content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+      background:rgba(255,255,255,.13);right:-36px;bottom:-45px
+    }
+    .feature-card.one{background:linear-gradient(135deg,#ff7c67,#ff9c66)}
+    .feature-card.two{background:linear-gradient(135deg,#547cff,#7e8fff)}
+    .feature-card.three{background:linear-gradient(135deg,#20b486,#4fd0a2)}
+    .feature-card small{font-size:12px;color:rgba(255,255,255,.82)}
+    .feature-card h3{font-size:20px;margin:10px 0 7px}
+    .feature-card p{font-size:12px;line-height:1.55;margin:0;color:rgba(255,255,255,.86);max-width:175px}
+    .feature-card .arrow{
+      position:absolute;right:16px;top:16px;width:34px;height:34px;border-radius:50%;
+      background:rgba(255,255,255,.18);display:grid;place-items:center;z-index:2
+    }
+    .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .audience{
+      background:#fff;border-radius:22px;padding:16px;min-height:126px;
+      box-shadow:var(--soft-shadow);border:1px solid var(--line);position:relative;overflow:hidden
+    }
+    .audience .a-icon{font-size:26px}
+    .audience h3{font-size:16px;margin:10px 0 6px}
+    .audience p{font-size:12px;color:var(--muted);margin:0;line-height:1.55;max-width:125px}
+    .audience .count{position:absolute;right:13px;top:13px;font-size:11px;color:#8b90a0;background:#f5f6fa;padding:5px 7px;border-radius:999px}
+    .random-card{
+      background:
+        linear-gradient(135deg,rgba(108,99,255,.96),rgba(76,196,160,.92));
+      color:#fff;border-radius:26px;padding:20px;display:flex;align-items:center;gap:16px;
+      box-shadow:0 16px 36px rgba(76,125,145,.2);position:relative;overflow:hidden
+    }
+    .random-card:before{
+      content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.10);right:-75px;top:-90px
+    }
+    .dice{
+      flex:0 0 auto;width:58px;height:58px;border-radius:19px;background:rgba(255,255,255,.18);
+      display:grid;place-items:center;font-size:30px;backdrop-filter:blur(10px)
+    }
+    .random-content{flex:1;position:relative;z-index:1}
+    .random-content small{color:rgba(255,255,255,.8)}
+    .random-content h3{font-size:18px;margin:5px 0 7px}
+    .random-content p{font-size:12px;margin:0;color:rgba(255,255,255,.84);line-height:1.5}
+    .random-btn{
+      margin-top:13px;padding:9px 13px;border-radius:12px;background:#fff;color:#5d56d8;
+      font-size:12px;font-weight:800
+    }
+    .feed{display:flex;flex-direction:column;gap:11px}
+    .feed-item{
+      background:#fff;border-radius:20px;padding:14px;display:flex;gap:13px;align-items:center;
+      box-shadow:var(--soft-shadow);border:1px solid var(--line)
+    }
+    .thumb{
+      width:68px;height:68px;border-radius:17px;display:grid;place-items:center;font-size:28px;flex:0 0 auto
+    }
+    .thumb.purple{background:#efedff}
+    .thumb.orange{background:#fff1e7}
+    .thumb.green{background:#e8f9f2}
+    .feed-main{min-width:0;flex:1}
+    .feed-main h4{font-size:14px;line-height:1.45;margin:0 0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .meta{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}
+    .mini-tag{padding:4px 7px;border-radius:999px;background:#f3f4f8;color:#777d8c}
+    .feed-arrow{color:#b2b6c0;font-size:19px}
+    .nav{
+      position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(430px,100%);
+      height:82px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);
+      border-top:1px solid rgba(230,232,240,.9);display:grid;grid-template-columns:repeat(4,1fr);
+      padding:9px 14px 16px;z-index:20
+    }
+    .nav-btn{
+      background:transparent;color:#8b90a0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px
+    }
+    .nav-btn .n-ico{font-size:21px}
+    .nav-btn.active{color:var(--brand);font-weight:800}
+    .toast{
+      position:fixed;left:50%;bottom:105px;transform:translate(-50%,12px);
+      background:rgba(24,27,36,.92);color:#fff;padding:11px 15px;border-radius:12px;
+      font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:40;white-space:nowrap
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .modal{
+      position:fixed;inset:0;background:rgba(19,22,32,.36);display:none;align-items:flex-end;justify-content:center;z-index:50
+    }
+    .modal.show{display:flex}
+    .sheet{
+      width:min(430px,100%);background:#fff;border-radius:28px 28px 0 0;padding:20px 20px 30px;
+      animation:up .22s ease-out
+    }
+    @keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:translateY(0);opacity:1}}
+    .sheet-handle{width:42px;height:5px;border-radius:99px;background:#e4e6ed;margin:0 auto 16px}
+    .sheet h3{font-size:18px;margin:0 0 7px}
+    .sheet p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 17px}
+    .sheet button{width:100%;padding:13px;border-radius:15px;background:var(--brand);color:#fff;font-weight:800}
+    @media (min-width:700px){
+      body{padding:20px 0}
+      .app{border-radius:34px;min-height:900px;box-shadow:0 24px 70px rgba(33,38,58,.15)}
+      .nav{bottom:20px;border-radius:0 0 34px 34px}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="safe"></div>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="brand-row">
+          <div class="brand">
+            <div class="logo">🫠</div>
+            <div>
+              <div class="brand-name">累了么</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.72);margin-top:2px;">你的碎片时间搭子</div>
+            </div>
+          </div>
+          <div class="weather-pill" id="timeText">周末 · 慢一点</div>
+        </div>
+        <div class="greeting">
+          <h1 id="greeting">晚上好，今天想干点什么？</h1>
+          <p>搜点新鲜的，或者随便逛逛。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" placeholder="搜热搜、爆款文案、AI 工具…" />
+        <button class="search-btn" id="searchBtn">搜索</button>
+      </div>
+    </section>
+
+    <div class="hot-tags" id="hotTags">
+      <button class="tag">🔥 今日热搜</button>
+      <button class="tag">爆款脚本</button>
+      <button class="tag">AI 工具</button>
+      <button class="tag">副业灵感</button>
+      <button class="tag">摸鱼指南</button>
+    </div>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>今天想做什么</h2>
+        <span>跟着感觉走</span>
+      </div>
+      <div class="mood-grid">
+        <button class="mood" data-key="赚钱"><div class="ico">💰</div><b>想赚钱</b></button>
+        <button class="mood" data-key="学习"><div class="ico">📚</div><b>想学习</b></button>
+        <button class="mood" data-key="放松"><div class="ico">🛋️</div><b>想放松</b></button>
+        <button class="mood" data-key="AI"><div class="ico">🤖</div><b>玩 AI</b></button>
+        <button class="mood" data-key="灵感"><div class="ico">💡</div><b>找灵感</b></button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>今日推荐</h2>
+        <span>每天都有新东西</span>
+      </div>
+      <div class="cards">
+        <article class="feature-card one" data-title="今日热搜 Top 10">
+          <div class="arrow">→</div>
+          <small>🔥 全网趋势</small>
+          <h3>今日热搜 Top 10</h3>
+          <p>三分钟看完今天大家都在聊什么。</p>
+        </article>
+        <article class="feature-card two" data-title="爆款文案灵感库">
+          <div class="arrow">→</div>
+          <small>✍️ 创作者必看</small>
+          <h3>爆款文案灵感库</h3>
+          <p>标题、开头、脚本结构，一次帮你找齐。</p>
+        </article>
+        <article class="feature-card three" data-title="今日 AI 新工具">
+          <div class="arrow">→</div>
+          <small>🤖 效率加速</small>
+          <h3>今日 AI 新工具</h3>
+          <p>发现真正好用的新产品和玩法。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>为你准备的入口</h2>
+        <span>不同人群，不同内容</span>
+      </div>
+      <div class="audience-grid">
+        <button class="audience" data-key="上班族">
+          <span class="count">128 条</span>
+          <div class="a-icon">💼</div>
+          <h3>上班族</h3>
+          <p>摸鱼、职场、效率与下班后的生活。</p>
+        </button>
+        <button class="audience" data-key="学生">
+          <span class="count">96 条</span>
+          <div class="a-icon">🎓</div>
+          <h3>学生党</h3>
+          <p>学习资源、校园生活与成长灵感。</p>
+        </button>
+        <button class="audience" data-key="宝妈">
+          <span class="count">74 条</span>
+          <div class="a-icon">👩‍👧</div>
+          <h3>宝妈专区</h3>
+          <p>亲子学习、育儿工具与家庭安排。</p>
+        </button>
+        <button class="audience" data-key="自媒体">
+          <span class="count">163 条</span>
+          <div class="a-icon">🎬</div>
+          <h3>自媒体</h3>
+          <p>选题、脚本、标题与爆款案例。</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="random-card">
+        <div class="dice">🎲</div>
+        <div class="random-content">
+          <small>累了，不想做决定？</small>
+          <h3>今天不知道干嘛</h3>
+          <p id="randomText">点一下，给你一个没有压力的小建议。</p>
+          <button class="random-btn" id="randomBtn">帮我选一个</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom:20px;">
+      <div class="section-title">
+        <h2>猜你喜欢</h2>
+        <span>根据热门内容推荐</span>
+      </div>
+      <div class="feed">
+        <article class="feed-item" data-title="10 个适合普通人的副业方向">
+          <div class="thumb purple">🧭</div>
+          <div class="feed-main">
+            <h4>10 个适合普通人的副业方向</h4>
+            <div class="meta"><span class="mini-tag">副业</span><span>2.8 万人看过</span></div>
+          </div>
+          <div class="feed-arrow">›</div>
+        </article>
+        <article class="feed-item" data-title="短视频爆款开头的 6 种写法">
+          <div class="thumb orange">🎯</div>
+          <div class="feed-main">
+            <h4>短视频爆款开头的 6 种写法</h4>
+            <div class="meta"><span class="mini-tag">创作</span><span>今日热门</span></div>
+          </div>
+          <div class="feed-arrow">›</div>
+        </article>
+        <article class="feed-item" data-title="本周值得收藏的 AI 工具">
+          <div class="thumb green">✨</div>
+          <div class="feed-main">
+            <h4>本周值得收藏的 AI 工具</h4>
+            <div class="meta"><span class="mini-tag">AI</span><span>持续更新</span></div>
+          </div>
+          <div class="feed-arrow">›</div>
+        </article>
+      </div>
+    </section>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-nav="首页"><span class="n-ico">⌂</span><span>首页</span></button>
+      <button class="nav-btn" data-nav="发现"><span class="n-ico">◉</span><span>发现</span></button>
+      <button class="nav-btn" data-nav="收藏"><span class="n-ico">♡</span><span>收藏</span></button>
+      <button class="nav-btn" data-nav="我的"><span class="n-ico">☺</span><span>我的</span></button>
+    </nav>
+  </main>
+
+  <div class="toast" id="toast">已更新</div>
+
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <h3 id="modalTitle">内容预览</h3>
+      <p id="modalText">这是首页高保真原型中的交互示意。后续可以接入真实搜索、内容聚合、后台配置和广告位。</p>
+      <button id="closeModal">知道了</button>
+    </div>
+  </div>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const toast = $("#toast");
+    let toastTimer;
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove("show"),1600);
+    }
+
+    function openModal(title, text){
+      $("#modalTitle").textContent = title;
+      $("#modalText").textContent = text || "这是交互原型。正式开发时可接入真实内容详情页。";
+      $("#modal").classList.add("show");
+    }
+
+    function runSearch(keyword){
+      const value = (keyword || $("#searchInput").value).trim();
+      if(!value){ showToast("先输入你想看的内容"); return; }
+      $("#searchInput").value = value;
+      openModal("正在搜索：" + value, "原型演示：这里将聚合相关文章、视频、热门标题、实用工具和内容来源；需要时再调用 AI 做总结或改写。");
+    }
+
+    function setGreeting(){
+      const h = new Date().getHours();
+      let text = "晚上好，今天想干点什么？";
+      if(h >= 5 && h < 11) text = "早上好，今天想先做什么？";
+      else if(h >= 11 && h < 14) text = "中午好，休息一下再出发。";
+      else if(h >= 14 && h < 18) text = "下午好，累了就来逛一会儿。";
+      else if(h >= 18 && h < 23) text = "晚上好，看看今天有什么新鲜事。";
+      else text = "夜深了，别太累，随便看看吧。";
+      $("#greeting").textContent = text;
+
+      const days = ["周日","周一","周二","周三","周四","周五","周六"];
+      $("#timeText").textContent = days[new Date().getDay()] + " · 慢一点";
+    }
+
+    $("#searchBtn").addEventListener("click",()=>runSearch());
+    $("#searchInput").addEventListener("keydown",e=>{ if(e.key==="Enter") runSearch(); });
+
+    $$("#hotTags .tag").forEach(btn=>{
+      btn.addEventListener("click",()=>runSearch(btn.textContent.replace("🔥 ","")));
+    });
+
+    $$(".mood,.audience").forEach(btn=>{
+      btn.addEventListener("click",()=>runSearch(btn.dataset.key));
+    });
+
+    $$(".feature-card,.feed-item").forEach(card=>{
+      card.addEventListener("click",()=>openModal(card.dataset.title,"这里会进入对应的内容聚合页或详情页。第一版可先用后台配置内容，后续再接入搜索和个性化推荐。"));
+    });
+
+    const suggestions = [
+      "看 3 分钟今日热搜，不用把自己卷进去。",
+      "收藏一个真正能提高效率的 AI 工具。",
+      "找一条爆款脚本，改成适合你的版本。",
+      "站起来走 5 分钟，再回来继续。",
+      "看一个轻松短视频，然后准时停下。",
+      "学一个今天就能用上的小技巧。",
+      "给未来的自己记下一条灵感。",
+      "什么都不做，喝口水，也算完成任务。"
+    ];
+    $("#randomBtn").addEventListener("click",()=>{
+      const item = suggestions[Math.floor(Math.random()*suggestions.length)];
+      $("#randomText").textContent = item;
+      showToast("已帮你选好");
+    });
+
+    $$(".nav-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        $$(".nav-btn").forEach(x=>x.classList.remove("active"));
+        btn.classList.add("active");
+        if(btn.dataset.nav !== "首页") showToast(btn.dataset.nav + "页将在下一版加入");
+      });
+    });
+
+    $("#closeModal").addEventListener("click",()=>$("#modal").classList.remove("show"));
+    $("#modal").addEventListener("click",e=>{ if(e.target.id==="modal") $("#modal").classList.remove("show"); });
+
+    setGreeting();
+  </script>
+</body>
+</html>

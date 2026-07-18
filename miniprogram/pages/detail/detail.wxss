@@ -1,0 +1,219 @@
+.page-wrap {
+  min-height: 100vh;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  padding: 60rpx 40rpx 50rpx;
+  color: #fff;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: -100rpx;
+  right: -120rpx;
+  width: 360rpx;
+  height: 360rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.type-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 800;
+  line-height: 1.4;
+  margin-bottom: 16rpx;
+}
+
+.summary {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.hero-meta {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.78);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 标签 */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  padding: 32rpx 40rpx 8rpx;
+}
+
+.tags .tag {
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  background: var(--brand-light);
+  color: var(--brand);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+/* 正文 */
+.body-wrap {
+  padding: 24rpx 40rpx 0;
+}
+
+.body {
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.body-plain {
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+/* 空正文兜底 */
+.body-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  gap: 18rpx;
+}
+
+.body-empty-emoji {
+  font-size: 80rpx;
+}
+
+.body-empty-text {
+  font-size: 26rpx;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* 互动栏 */
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  margin: 40rpx 40rpx 0;
+  padding: 22rpx 24rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+  border: 1rpx solid var(--line);
+  overflow: hidden;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: var(--muted);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.action-icon {
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.action-text {
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+
+.action-hover {
+  opacity: 0.6;
+}
+
+.action-fav-btn {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 14rpx 30rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 18rpx rgba(108, 99, 255, 0.24);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.action-fav-btn.active {
+  background: #fff;
+  color: var(--brand);
+  border: 1rpx solid var(--brand);
+  box-shadow: none;
+}
+
+.btn-hover {
+  opacity: 0.8;
+}
+
+/* 来源 */
+.source-row {
+  margin: 32rpx 40rpx 0;
+  padding: 24rpx 28rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  border: 1rpx solid var(--line);
+}
+
+.source-label {
+  font-size: 22rpx;
+  color: var(--muted);
+  margin-bottom: 8rpx;
+}
+
+.source-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.source-link {
+  color: var(--brand);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+/* 相关推荐 */
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}

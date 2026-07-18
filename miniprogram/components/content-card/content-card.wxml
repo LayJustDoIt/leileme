@@ -1,0 +1,27 @@
+<view class="card item" bindtap="onTap" hover-class="item-hover" hover-stay-time="80">
+  <view class="thumb">
+    <image
+      wx:if="{{hasCover}}"
+      class="thumb-image"
+      src="{{item.coverUrl}}"
+      mode="aspectFill"
+      binderror="onImageError"
+    />
+    <view wx:else class="thumb-default {{typeClass}}">
+      <text class="thumb-emoji">{{typeIcon}}</text>
+      <text class="thumb-type">{{typeName}}</text>
+    </view>
+  </view>
+  <view class="main">
+    <view class="title ellipsis-2">{{item.title}}</view>
+    <view class="summary ellipsis-1" wx:if="{{item.summary}}">{{item.summary}}</view>
+    <view class="meta">
+      <view class="type-pill" style="color:{{typeColor}};background:{{typeColor}}1a;">
+        {{typeName}}
+      </view>
+      <text class="meta-text">{{viewText}}</text>
+      <text class="meta-dot" wx:if="{{item.sourceName}}">·</text>
+      <text class="meta-text ellipsis-1" wx:if="{{item.sourceName}}">{{item.sourceName}}</text>
+    </view>
+  </view>
+</view>

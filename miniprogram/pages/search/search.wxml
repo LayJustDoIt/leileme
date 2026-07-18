@@ -1,0 +1,82 @@
+<view class="page-wrap">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-box">
+      <text class="search-icon">⌕</text>
+      <input
+        class="search-input"
+        type="text"
+        value="{{inputKeyword}}"
+        placeholder="搜热搜、爆款文案、AI 工具…"
+        confirm-type="search"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+        focus="{{!keyword}}"
+      />
+      <view wx:if="{{inputKeyword}}" class="clear-btn" bindtap="onClearInput">×</view>
+      <view class="search-btn" bindtap="onSearchBtn">搜索</view>
+    </view>
+  </view>
+
+  <!-- 类型筛选 -->
+  <scroll-view wx:if="{{filters.length > 0}}" class="filter-bar" scroll-x enable-flex>
+    <view
+      class="filter-pill {{selectedType === '' ? 'active' : ''}}"
+      data-code=""
+      bindtap="onFilterTap"
+    >全部</view>
+    <view
+      wx:for="{{filters}}"
+      wx:key="code"
+      class="filter-pill {{selectedType === item.code ? 'active' : ''}}"
+      data-code="{{item.code}}"
+      bindtap="onFilterTap"
+    >{{item.name}} {{item.count}}</view>
+  </scroll-view>
+
+  <!-- 兜底提示 -->
+  <view wx:if="{{fallback && list.length > 0 && !loading}}" class="fallback-tip">
+    🌱 没找到「{{keyword}}」相关内容，先给你推荐一些热门的
+  </view>
+
+  <!-- 首次加载 -->
+  <loading wx:if="{{loading}}" text="搜索中…"></loading>
+
+  <!-- 错误 -->
+  <error-state
+    wx:if="{{error && !loading}}"
+    title="搜索失败"
+    desc="{{error}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <!-- 空状态 -->
+  <empty
+    wx:if="{{!loading && !error && hasSearched && list.length === 0}}"
+    icon="🔍"
+    title="没有找到相关内容"
+    desc="换个关键词试试看？"
+  ></empty>
+
+  <!-- 初始未搜索 -->
+  <view wx:if="{{!hasSearched && !loading}}" class="init-tip">
+    <view class="init-emoji">🔎</view>
+    <view class="init-text">输入关键词，看看今天有什么新鲜内容</view>
+  </view>
+
+  <!-- 结果列表 -->
+  <view class="result-list" wx:if="{{list.length > 0}}">
+    <view class="result-meta">共 {{total}} 条结果</view>
+    <view class="feed">
+      <content-card
+        wx:for="{{list}}"
+        wx:key="id"
+        item="{{item}}"
+        position="{{index}}"
+        bind:tap="onContentTap"
+      ></content-card>
+    </view>
+    <loading wx:if="{{loadingMore}}" text="加载更多…"></loading>
+    <view wx:if="{{!hasNext && list.length > 0}}" class="no-more">已经到底啦</view>
+  </view>
+</view>
