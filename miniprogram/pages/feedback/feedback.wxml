@@ -1,0 +1,60 @@
+<view class="page-wrap">
+  <!-- 引导文案（来自 public-config.feedbackHint，不再写死业务文案） -->
+  <view class="hint-card" wx:if="{{config.feedbackHint}}">
+    <view class="hint-emoji">✉️</view>
+    <view class="hint-text">{{config.feedbackHint}}</view>
+  </view>
+
+  <!-- 反馈内容 -->
+  <view class="field">
+    <view class="field-label">
+      <text class="label-text">反馈内容</text>
+      <text class="counter">{{content.length}}/{{contentMax}}</text>
+    </view>
+    <view class="textarea-wrap">
+      <textarea
+        class="textarea"
+        value="{{content}}"
+        placeholder="说说你的想法、遇到的问题或建议（{{contentMin}}-{{contentMax}} 字）"
+        placeholder-class="placeholder"
+        maxlength="{{contentMax}}"
+        auto-height
+        bindinput="onContentInput"
+        disabled="{{submitting}}"
+      ></textarea>
+    </view>
+  </view>
+
+  <!-- 联系方式（可选） -->
+  <view class="field">
+    <view class="field-label">
+      <text class="label-text">联系方式<text class="optional">（可选）</text></text>
+      <text class="counter">{{contact.length}}/{{contactMax}}</text>
+    </view>
+    <view class="input-wrap">
+      <input
+        class="input"
+        type="text"
+        value="{{contact}}"
+        placeholder="方便我们回复你，如微信号或邮箱"
+        placeholder-class="placeholder"
+        maxlength="{{contactMax}}"
+        bindinput="onContactInput"
+        disabled="{{submitting}}"
+      />
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-tip" wx:if="{{error}}">{{error}}</view>
+
+  <!-- 提交按钮 -->
+  <view
+    class="submit-btn {{submitting ? 'submit-btn-loading' : ''}}"
+    bindtap="onSubmit"
+    hover-class="submit-btn-hover"
+  >{{submitting ? '提交中…' : '提交反馈'}}</view>
+
+  <!-- 底部安全区适配（非 tabBar 页面） -->
+  <view class="safe-area-bottom"></view>
+</view>

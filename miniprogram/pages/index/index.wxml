@@ -6,14 +6,14 @@
         <view class="brand">
           <view class="logo">🫠</view>
           <view class="brand-text">
-            <view class="brand-name">累了么</view>
-            <view class="brand-sub">你的碎片时间搭子</view>
+            <view class="brand-name">{{(config && config.appName) || '累了么'}}</view>
+            <view class="brand-sub">{{(config && config.slogan) || ''}}</view>
           </view>
         </view>
         <view class="weather-pill">{{weekday}}</view>
       </view>
       <view class="greeting">
-        <view class="greeting-text">{{greeting || home.greeting}}</view>
+        <view class="greeting-text">{{greeting || (home && home.greeting)}}</view>
         <view class="greeting-sub">搜点新鲜的，或者随便逛逛。</view>
       </view>
     </view>

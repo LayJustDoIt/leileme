@@ -42,6 +42,11 @@ services:
       REDIS_PORT: 6379
       SQL_INIT_MODE: always
       TZ: Asia/Shanghai
+      # 登录与微信配置：开发环境默认允许 mock 登录，无需真实微信凭证
+      WECHAT_MOCK_ENABLED: ${WECHAT_MOCK_ENABLED:-true}
+      WECHAT_APP_ID: ${WECHAT_APP_ID:-}
+      WECHAT_APP_SECRET: ${WECHAT_APP_SECRET:-}
+      JWT_SECRET: ${JWT_SECRET:-leileme-local-dev-jwt-secret-change-me-2026}
     ports:
       - "8080:8080"
     depends_on:

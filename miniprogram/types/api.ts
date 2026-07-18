@@ -160,3 +160,32 @@ export interface HistoryItemVO {
   browseCount: number;
   lastBrowsedAt: string;
 }
+
+// ===== 第三阶段：公共配置 / 反馈 =====
+
+// 公共配置（对外可读，不含密钥）
+export interface PublicConfigVO {
+  appName: string;
+  slogan: string;
+  versionName: string;
+  aboutTitle: string;
+  aboutContent: string;
+  feedbackEnabled: boolean;
+  feedbackHint: string;
+  contactText: string;
+  announcement: string | null;
+}
+
+// 反馈提交请求
+export interface FeedbackRequest {
+  content: string;
+  contact?: string;
+  pagePath?: string;
+  sessionId?: string;
+}
+
+// 反馈提交响应
+export interface FeedbackResultVO {
+  feedbackId: number;
+  submittedAt: string;
+}

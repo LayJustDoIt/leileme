@@ -191,3 +191,16 @@ CREATE TABLE IF NOT EXISTS admin_user (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uk_admin_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS feedback_record (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT DEFAULT NULL,
+    session_id VARCHAR(100) DEFAULT NULL,
+    content VARCHAR(1000) NOT NULL,
+    contact VARCHAR(100) DEFAULT NULL,
+    page_path VARCHAR(255) DEFAULT NULL,
+    submitted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_feedback_user_time (user_id, submitted_at),
+    KEY idx_feedback_session_time (session_id, submitted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,140 @@
+.page-wrap {
+  min-height: 100vh;
+  padding: 32rpx 32rpx 0;
+  box-sizing: border-box;
+}
+
+/* 引导卡片 */
+.hint-card {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: var(--brand-light);
+  border-radius: 24rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 32rpx;
+}
+
+.hint-emoji {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 16rpx;
+  background: rgba(108, 99, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.hint-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* 表单字段 */
+.field {
+  background: #fff;
+  border-radius: 28rpx;
+  border: 1rpx solid var(--line);
+  padding: 24rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(33, 38, 58, 0.04);
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.label-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.optional {
+  font-size: 22rpx;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.counter {
+  font-size: 22rpx;
+  color: var(--muted);
+  font-family: -apple-system, monospace;
+}
+
+.textarea-wrap {
+  background: var(--bg);
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  min-height: 200rpx;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 200rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.input-wrap {
+  background: var(--bg);
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+}
+
+.input {
+  width: 100%;
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.placeholder {
+  color: var(--muted);
+  font-size: 26rpx;
+}
+
+/* 错误提示 */
+.error-tip {
+  color: #ff5a5a;
+  font-size: 24rpx;
+  margin: 0 8rpx 24rpx;
+  line-height: 1.4;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  background: linear-gradient(135deg, #6c63ff 0%, #8274ff 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 700;
+  text-align: center;
+  padding: 28rpx 0;
+  border-radius: 999rpx;
+  box-shadow: 0 16rpx 32rpx rgba(108, 99, 255, 0.28);
+  margin-top: 16rpx;
+}
+
+.submit-btn-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.submit-btn-hover {
+  opacity: 0.88;
+}
+
+/* 底部安全区 */
+.safe-area-bottom {
+  width: 100%;
+  height: calc(60rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}

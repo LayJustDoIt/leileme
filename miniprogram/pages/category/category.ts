@@ -90,7 +90,7 @@ Page<CategoryPageData, {}>({
       this.setData({ loadingMore: true });
     }
     try {
-      // V1 后端没有按分类查列表的独立接口，分类页通过搜索接口 + contentType/keyword 兜底。
+      // 后端没有按分类查列表的独立接口，分类页通过搜索接口 + contentType/keyword 兜底。
       // 当前实现：使用分类 name 作为关键词调用 /search，让后端按相关度返回。
       const cat = this.data.categories.find((c) => c.id === this.data.activeId);
       const keyword = cat?.name || '';

@@ -25,12 +25,14 @@ export interface RequestOptions {
 // 业务错误（code != 0）
 export class BizError extends Error {
   code: number;
+  statusCode?: number;
   requestId?: string;
-  constructor(message: string, code: number, requestId?: string) {
+  constructor(message: string, code: number, requestId?: string, statusCode?: number) {
     super(message);
     this.name = 'BizError';
     this.code = code;
     this.requestId = requestId;
+    this.statusCode = statusCode;
   }
 }
 
@@ -115,6 +117,20 @@ export function request<T = any>(opts: RequestOptions): Promise<T> {
           return;
         }
 
+        // 优先识别后端统一响应体：即使 HTTP 非 2xx，只要 body 是 ApiResponse，
+        // 就按业务错误处理，显示后端 message，而不是“网络异常（xxx）”。
+        if (body && typeof body === 'object' && 'code' in body) {
+          if (statusCode >= 200 && statusCode < 300 && body.code === 0) {
+            resolve(body.data);
+            return;
+          }
+          const message = body.message || `请求失败（${statusCode}）`;
+          if (showErrorToast) wx.showToast({ title: message, icon: 'none' });
+          reject(new BizError(message, body.code, body.requestId, statusCode));
+          return;
+        }
+
+        // 真正没有业务响应体时才视为网络异常
         if (statusCode < 200 || statusCode >= 300) {
           const msg = `网络异常（${statusCode}）`;
           if (showErrorToast) wx.showToast({ title: msg, icon: 'none' });
@@ -122,16 +138,7 @@ export function request<T = any>(opts: RequestOptions): Promise<T> {
           return;
         }
 
-        if (body && typeof body === 'object' && 'code' in body) {
-          if (body.code === 0) {
-            resolve(body.data);
-          } else {
-            if (showErrorToast) wx.showToast({ title: body.message || '请求失败', icon: 'none' });
-            reject(new BizError(body.message || '请求失败', body.code, body.requestId));
-          }
-        } else {
-          resolve(body as unknown as T);
-        }
+        resolve(body as unknown as T);
       },
       fail(err) {
         const msg = err.errMsg || '网络请求失败';

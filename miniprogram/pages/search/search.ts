@@ -21,6 +21,16 @@ interface SearchPageData {
 
 const PAGE_SIZE = 20;
 
+// 安全解码一次 URL 编码的关键词，避免重复 decode 或将 %E4... 发到后端
+function safeDecode(value: string): string {
+  if (!value) return '';
+  try {
+    return decodeURIComponent(value);
+  } catch (e) {
+    return value;
+  }
+}
+
 Page<SearchPageData, {}>({
   data: {
     keyword: '',
@@ -41,10 +51,12 @@ Page<SearchPageData, {}>({
   },
 
   onLoad(query: AnyObject) {
-    const kw = (query?.keyword as string) || '';
-    if (kw) {
-      this.setData({ keyword: kw, inputKeyword: kw });
-      this.doSearch(kw, 1, '');
+    // 跳转入口使用 encodeURIComponent(keyword) 编码，这里必须安全解码一次
+    const raw = String(query?.keyword || '');
+    const keyword = safeDecode(raw).trim();
+    this.setData({ keyword, inputKeyword: keyword });
+    if (keyword) {
+      this.doSearch(keyword, 1, '');
     }
   },
 

@@ -14,6 +14,12 @@
     </view>
   </view>
 
+  <!-- 公告（来自 public-config.announcement） -->
+  <view class="announce" wx:if="{{config && config.announcement}}">
+    <view class="announce-emoji">📣</view>
+    <view class="announce-text">{{config.announcement}}</view>
+  </view>
+
   <!-- 随机建议 -->
   <view class="section" wx:if="{{randomTip}}">
     <view class="section-title">
@@ -48,16 +54,21 @@
           <view class="menu-label">{{item.label}}</view>
           <view class="menu-desc">{{item.desc}}</view>
         </view>
-        <view class="menu-soon" wx:if="{{item.soon}}">敬请期待</view>
         <view class="menu-arrow">›</view>
       </view>
     </view>
   </view>
 
-  <!-- 调试信息（开发期可隐藏） -->
-  <view class="section">
+  <!-- 版本号（来自 public-config.versionName） -->
+  <view class="version-row" wx:if="{{config && config.versionName}}">
+    {{config.appName || '累了么'}} v{{config.versionName}}
+  </view>
+
+  <!-- 开发信息（仅 dev 环境显示） -->
+  <view class="section" wx:if="{{isDev}}">
     <view class="section-title">
       <text class="title">开发信息</text>
+      <text class="sub">仅 dev 环境可见</text>
     </view>
     <view class="dev-card">
       <view class="dev-row">
@@ -75,6 +86,17 @@
     </view>
   </view>
 
-  <view class="footer">累了么 V1 · 公益向内容工具</view>
   <view class="tabbar-safe-space"></view>
+
+  <!-- 关于我们弹窗 -->
+  <view class="about-mask" wx:if="{{aboutVisible}}" bindtap="onCloseAbout">
+    <view class="about-modal" catchtap>
+      <view class="about-title">{{(config && config.aboutTitle) || '关于累了么'}}</view>
+      <scroll-view class="about-scroll" scroll-y>
+        <text class="about-content">{{(config && config.aboutContent) || '累了么是一个面向碎片时间的内容发现工具。'}}</text>
+        <text class="about-contact" wx:if="{{config && config.contactText}}">{{config.contactText}}</text>
+      </scroll-view>
+      <view class="about-btn" bindtap="onCloseAbout">知道了</view>
+    </view>
+  </view>
 </view>

@@ -1,6 +1,7 @@
 import { fetchHome, fetchRandomTip } from '../../services/api';
 import { dynamicGreeting, weekdayText, resolveEntryIcon } from '../../utils/format';
-import type { HomeVO, RandomTipVO } from '../../types/api';
+import { getPublicConfig, getCachedPublicConfig } from '../../services/public-config';
+import type { HomeVO, RandomTipVO, PublicConfigVO } from '../../types/api';
 
 interface IndexData {
   greeting: string;
@@ -11,6 +12,7 @@ interface IndexData {
   loadingMore: boolean;
   error: string;
   tipRefreshing: boolean;
+  config: PublicConfigVO | null;
 }
 
 Page<IndexData, {}>({
@@ -23,14 +25,17 @@ Page<IndexData, {}>({
     loadingMore: false,
     error: '',
     tipRefreshing: false,
+    config: null,
   },
 
   onLoad() {
     this.setData({
       greeting: dynamicGreeting(),
       weekday: weekdayText(),
+      config: getCachedPublicConfig(),
     });
     this.loadAll();
+    this.loadPublicConfig();
   },
 
   onShow() {
@@ -42,9 +47,15 @@ Page<IndexData, {}>({
   },
 
   onPullDownRefresh() {
-    this.loadAll(true).finally(() => {
-      wx.stopPullDownRefresh();
-    });
+    Promise.all([this.loadAll(true), this.loadPublicConfig()])
+      .finally(() => {
+        wx.stopPullDownRefresh();
+      });
+  },
+
+  async loadPublicConfig() {
+    const config = await getPublicConfig();
+    this.setData({ config });
   },
 
   async loadAll(isRefresh = false) {
@@ -140,8 +151,11 @@ Page<IndexData, {}>({
   },
 
   onShareAppMessage() {
+    const cfg = this.data.config;
+    const appName = cfg?.appName || '累了么';
+    const slogan = cfg?.slogan || '你的碎片时间搭子';
     return {
-      title: '累了么 · 你的碎片时间搭子',
+      title: `${appName} · ${slogan}`,
       path: '/pages/index/index',
     };
   },

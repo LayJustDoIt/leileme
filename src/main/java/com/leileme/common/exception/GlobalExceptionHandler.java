@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,10 +16,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // 业务异常：根据 code 映射 HTTP 状态。
+    // 429xx（限流类）→ 429 Too Many Requests；其他默认 400 Bad Request。
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Void> handleBusiness(BusinessException ex) {
-        return ApiResponse.error(ex.getCode(), ex.getMessage());
+    public ResponseEntity<ApiResponse<Void>> handleBusiness(BusinessException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        int code = ex.getCode();
+        if (code >= 42900 && code < 43000) {
+            status = HttpStatus.TOO_MANY_REQUESTS;
+        }
+        return ResponseEntity.status(status).body(ApiResponse.error(ex.getCode(), ex.getMessage()));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -32,6 +40,13 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(40001, "请求参数错误");
     }
 
+    // JSON 无法解析（格式错误、类型不匹配）必须返回 400，不能落入通用 500
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Void> handleNotReadable(HttpMessageNotReadableException ex) {
+        return ApiResponse.error(40001, "请求体格式错误");
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Void> handleUnexpected(Exception ex) {
@@ -39,3 +54,4 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(50000, "系统内部错误");
     }
 }
+

@@ -12,7 +12,7 @@ public class UnauthorizedException extends RuntimeException {
     }
 
     public UnauthorizedException(String message) {
-        this(40100, message);
+        this(40101, message);
     }
 
     public int getCode() { return code; }

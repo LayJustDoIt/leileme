@@ -9,6 +9,8 @@ import type {
   CategoryVO,
   RandomTipVO,
   SearchParams,
+  FeedbackRequest,
+  FeedbackResultVO,
 } from '../types/api';
 
 export function fetchHome(): Promise<HomeVO> {
@@ -50,4 +52,18 @@ export function fetchCategories(): Promise<CategoryVO[]> {
 
 export function fetchRandomTip(): Promise<RandomTipVO> {
   return get<RandomTipVO>(API_PATHS.randomTip);
+}
+
+/**
+ * 提交反馈。登录与匿名用户均可调用，自动注入 sessionId 兜底。
+ * 关闭默认 toast，由页面自行处理错误展示。
+ */
+export function submitFeedback(payload: FeedbackRequest): Promise<FeedbackResultVO> {
+  const body: FeedbackRequest = {
+    ...payload,
+    sessionId: payload.sessionId || getSessionId(),
+  };
+  return post<FeedbackResultVO>(API_PATHS.feedback, body as unknown as Record<string, any>, {
+    showErrorToast: false,
+  });
 }

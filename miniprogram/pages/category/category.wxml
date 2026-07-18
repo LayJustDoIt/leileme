@@ -22,6 +22,7 @@
         <view class="cat-desc-text">
           <view class="cat-desc-name">{{item.name}}</view>
           <view class="cat-desc-detail" wx:if="{{item.description}}">{{item.description}}</view>
+          <view class="cat-desc-detail" wx:else>看看这个分类下的精选内容</view>
         </view>
       </block>
     </block>

@@ -2,18 +2,30 @@ import { fetchRandomTip } from '../../services/api';
 import { wechatLogin } from '../../services/auth';
 import { isLoggedIn, getUser, setToken, setUser, clearAuth, type UserInfo } from '../../utils/auth';
 import { env } from '../../config/env';
-import type { RandomTipVO } from '../../types/api';
+import { getPublicConfig, getCachedPublicConfig } from '../../services/public-config';
+import type { RandomTipVO, PublicConfigVO } from '../../types/api';
+
+interface MineMenu {
+  key: string;
+  label: string;
+  icon: string;
+  desc: string;
+}
 
 interface MinePageData {
   sessionId: string;
   envName: string;
   apiBase: string;
+  isDev: boolean;
   randomTip: RandomTipVO | null;
   tipLoading: boolean;
   loggedIn: boolean;
   user: UserInfo | null;
   loginLoading: boolean;
-  menuList: Array<{ key: string; label: string; icon: string; desc: string; soon?: boolean }>;
+  menuList: MineMenu[];
+  config: PublicConfigVO | null;
+  // 关于我们弹窗
+  aboutVisible: boolean;
 }
 
 Page<MinePageData, {}>({
@@ -21,6 +33,7 @@ Page<MinePageData, {}>({
     sessionId: '',
     envName: env.envName,
     apiBase: env.apiBase,
+    isDev: env.envName === 'dev',
     randomTip: null,
     tipLoading: false,
     loggedIn: false,
@@ -29,16 +42,22 @@ Page<MinePageData, {}>({
     menuList: [
       { key: 'favorite', label: '我的收藏', icon: '❤️', desc: '收藏的内容' },
       { key: 'history', label: '浏览历史', icon: '🕒', desc: '近期看过的内容' },
-      { key: 'feedback', label: '反馈建议', icon: '✉️', desc: '告诉我们你的想法', soon: true },
-      { key: 'about', label: '关于累了么', icon: '🌟', desc: 'V1 · 公益向内容工具' },
+      { key: 'feedback', label: '反馈建议', icon: '✉️', desc: '告诉我们你的想法' },
+      { key: 'about', label: '关于累了么', icon: '🌟', desc: '查看介绍' },
     ],
+    config: null,
+    aboutVisible: false,
   },
 
   onLoad() {
     const app = getApp<IAppOption>();
-    this.setData({ sessionId: app?.globalData?.sessionId || '' });
+    this.setData({
+      sessionId: app?.globalData?.sessionId || '',
+      config: getCachedPublicConfig(),
+    });
     this.refreshLoginState();
     this.loadTip();
+    this.loadPublicConfig();
   },
 
   onShow() {
@@ -56,6 +75,11 @@ Page<MinePageData, {}>({
       loggedIn: isLoggedIn(),
       user: getUser(),
     });
+  },
+
+  async loadPublicConfig() {
+    const config = await getPublicConfig();
+    this.setData({ config });
   },
 
   async loadTip() {
@@ -118,8 +142,14 @@ Page<MinePageData, {}>({
     const key = e.currentTarget.dataset.key as string;
     const item = this.data.menuList.find((m) => m.key === key);
     if (!item) return;
-    if (item.soon) {
-      wx.showToast({ title: '功能即将上线', icon: 'none' });
+    // 反馈功能开关：若已显式关闭则提示
+    if (key === 'feedback') {
+      const cfg = this.data.config;
+      if (cfg && cfg.feedbackEnabled === false) {
+        wx.showToast({ title: cfg.feedbackHint || '反馈功能暂未开放', icon: 'none' });
+        return;
+      }
+      wx.navigateTo({ url: '/pages/feedback/feedback' });
       return;
     }
     // 收藏和历史需要登录
@@ -136,13 +166,19 @@ Page<MinePageData, {}>({
       return;
     }
     if (key === 'about') {
-      wx.showModal({
-        title: '关于累了么',
-        content: '累了么是一个面向碎片时间的内容工具，聚合热搜、文案、工具与学习资源。\n\n公益向，支持微信登录后收藏与浏览历史。',
-        showCancel: false,
-        confirmText: '知道了',
-      });
+      const cfg = this.data.config;
+      const aboutContent = (cfg && cfg.aboutContent) || '';
+      // aboutContent 为空时不打开只有标题的弹窗，改为提示
+      if (!aboutContent.trim()) {
+        wx.showToast({ title: '关于内容加载中，请稍后再试', icon: 'none' });
+        return;
+      }
+      this.setData({ aboutVisible: true });
     }
+  },
+
+  onCloseAbout() {
+    this.setData({ aboutVisible: false });
   },
 
   onCopySession() {
@@ -151,8 +187,11 @@ Page<MinePageData, {}>({
   },
 
   onShareAppMessage() {
+    const cfg = this.data.config;
+    const appName = cfg?.appName || '累了么';
+    const slogan = cfg?.slogan || '你的碎片时间搭子';
     return {
-      title: '累了么 · 你的碎片时间搭子',
+      title: `${appName} · ${slogan}`,
       path: '/pages/index/index',
     };
   },

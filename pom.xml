@@ -14,7 +14,7 @@
     <artifactId>leileme-backend</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>leileme-backend</name>
-    <description>累了么 V1 内容聚合与搜索后端</description>
+    <description>累了么内容聚合与搜索后端</description>
 
     <properties>
         <java.version>21</java.version>

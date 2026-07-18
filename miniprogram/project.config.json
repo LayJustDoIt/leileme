@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./",
   "projectname": "leileme-miniprogram",
-  "description": "累了么 V1 微信小程序",
+  "description": "累了么微信小程序",
   "appid": "wx6d6f157544466ffd",
   "setting": {
     "urlCheck": false,

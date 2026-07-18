@@ -62,7 +62,7 @@
     <view class="source-row" wx:if="{{detail.sourceUrl || detail.sourceName}}">
       <view class="source-label">内容来源</view>
       <view class="source-value">
-        <text>{{detail.sourceName || '累了么'}}</text>
+        <text>{{detail.sourceName}}</text>
         <text wx:if="{{detail.sourceUrl}}" class="source-link" data-url="{{detail.sourceUrl}}">查看原文 ›</text>
       </view>
     </view>

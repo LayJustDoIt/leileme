@@ -35,6 +35,10 @@ export const API_PATHS = {
   contents: (id: number | string) => `${API_PREFIX}/contents/${id}`,
   categories: `${API_PREFIX}/categories`,
   randomTip: `${API_PREFIX}/random-tip`,
+  // 公共配置（对外可读，不要求登录）
+  publicConfig: `${API_PREFIX}/public-config`,
+  // 反馈
+  feedback: `${API_PREFIX}/feedback`,
   // 登录
   authWechatLogin: `${API_PREFIX}/auth/wechat-login`,
   // 收藏

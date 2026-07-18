@@ -47,11 +47,32 @@ logging:
     com.leileme: INFO
 
 # 登录与微信配置：真实密钥通过环境变量注入，禁止写入仓库
+# 开发环境默认允许 mock 登录，避免缺少真实微信凭证时登录接口报错
 auth:
   wechat:
     app-id: ${WECHAT_APP_ID:}
     app-secret: ${WECHAT_APP_SECRET:}
-    mock-enabled: ${WECHAT_MOCK_ENABLED:false}
+    mock-enabled: ${WECHAT_MOCK_ENABLED:true}
   jwt:
-    secret: ${JWT_SECRET:}
+    secret: ${JWT_SECRET:leileme-local-dev-jwt-secret-change-me-2026}
     expires-in: 604800
+
+# 公共配置（对外可读，不含任何密钥）。运营可调整文案与开关。
+# 所有字段均可被环境变量覆盖：PUBLIC_CONFIG_APP_NAME / PUBLIC_CONFIG_SLOGAN 等。
+public-config:
+  app-name: ${PUBLIC_CONFIG_APP_NAME:累了么}
+  slogan: ${PUBLIC_CONFIG_SLOGAN:你的碎片时间搭子}
+  version-name: ${PUBLIC_CONFIG_VERSION_NAME:1.0.0}
+  about-title: ${PUBLIC_CONFIG_ABOUT_TITLE:关于累了么}
+  about-content: ${PUBLIC_CONFIG_ABOUT_CONTENT:累了么是一个面向碎片时间的内容发现工具，帮助用户发现热点、实用工具、创作灵感和轻量内容。}
+  feedback-enabled: ${PUBLIC_CONFIG_FEEDBACK_ENABLED:true}
+  feedback-hint: ${PUBLIC_CONFIG_FEEDBACK_HINT:告诉我们你的想法}
+  contact-text: ${PUBLIC_CONFIG_CONTACT_TEXT:}
+  announcement: ${PUBLIC_CONFIG_ANNOUNCEMENT:}
+
+# 反馈功能配置
+feedback:
+  # 同一用户/会话最小重复提交间隔（秒）
+  min-interval-seconds: ${FEEDBACK_MIN_INTERVAL:60}
+  # 单日每用户/会话最大提交数
+  daily-limit: ${FEEDBACK_DAILY_LIMIT:10}

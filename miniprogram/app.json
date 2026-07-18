@@ -6,7 +6,8 @@
     "pages/category/category",
     "pages/mine/mine",
     "pages/favorites/favorites",
-    "pages/history/history"
+    "pages/history/history",
+    "pages/feedback/feedback"
   ],
   "window": {
     "navigationBarBackgroundColor": "#6c63ff",
