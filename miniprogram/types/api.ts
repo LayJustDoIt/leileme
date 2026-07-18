@@ -118,3 +118,45 @@ export interface SearchParams {
   sessionId?: string;
   userId?: number;
 }
+
+// ===== 第二阶段：登录 / 收藏 / 浏览历史 =====
+
+// 用户信息
+export interface UserVO {
+  id: number;
+  nickname: string | null;
+  avatarUrl: string | null;
+}
+
+// 登录响应
+export interface LoginResultVO {
+  accessToken: string;
+  expiresIn: number;
+  user: UserVO;
+}
+
+// 通用分页结果
+export interface PageResultVO<T> {
+  page: number;
+  size: number;
+  total: number;
+  hasNext: boolean;
+  list: T[];
+}
+
+// 浏览历史列表项
+export interface HistoryItemVO {
+  id: number;
+  contentType: string;
+  title: string;
+  summary?: string;
+  coverUrl?: string;
+  sourceName?: string;
+  tags?: string[];
+  viewCount: number;
+  favoriteCount: number;
+  publishedAt?: string;
+  favorite: boolean;
+  browseCount: number;
+  lastBrowsedAt: string;
+}

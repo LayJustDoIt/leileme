@@ -1,0 +1,112 @@
+.page-wrap {
+  min-height: 100vh;
+  padding-bottom: 0;
+}
+
+/* 头部 */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 32rpx 0;
+}
+
+.head-meta {
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+.clear-btn {
+  font-size: 24rpx;
+  color: var(--muted);
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  border: 1rpx solid var(--line);
+}
+
+.clear-btn-hover {
+  background: #fafafe;
+  color: var(--text);
+}
+
+.clear-btn-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 列表 */
+.feed-wrap {
+  padding: 20rpx 32rpx 0;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.history-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8rpx;
+}
+
+.meta-left {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  min-width: 0;
+  flex: 1;
+}
+
+.meta-text {
+  font-size: 22rpx;
+  color: var(--muted);
+}
+
+.meta-dot {
+  font-size: 22rpx;
+  color: var(--muted);
+}
+
+.del-btn {
+  font-size: 24rpx;
+  color: var(--muted);
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  border: 1rpx solid var(--line);
+  flex-shrink: 0;
+}
+
+.del-btn-hover {
+  background: #fafafe;
+  color: var(--text);
+}
+
+.del-btn-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+/* 非 tabBar 页面底部安全区适配 */
+.safe-area-bottom {
+  width: 100%;
+  height: calc(40rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}

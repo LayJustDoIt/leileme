@@ -71,6 +71,22 @@
   z-index: 1;
 }
 
+.login-btn-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 999rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+}
+
 /* 随机建议 */
 .tip-card {
   display: flex;

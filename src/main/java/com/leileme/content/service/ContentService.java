@@ -2,31 +2,34 @@ package com.leileme.content.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.leileme.common.auth.UserContext;
 import com.leileme.common.exception.BusinessException;
 import com.leileme.content.entity.Content;
 import com.leileme.content.mapper.ContentMapper;
 import com.leileme.content.vo.ContentCardVO;
 import com.leileme.content.vo.ContentDetailVO;
 import com.leileme.content.vo.RandomTipVO;
-import com.leileme.history.entity.UserBrowseRecord;
-import com.leileme.history.mapper.UserBrowseRecordMapper;
+import com.leileme.history.service.HistoryService;
+import com.leileme.user.service.FavoriteService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class ContentService {
     private final ContentMapper contentMapper;
-    private final UserBrowseRecordMapper browseRecordMapper;
     private final ContentAssembler assembler;
+    private final HistoryService historyService;
+    private final FavoriteService favoriteService;
 
-    public ContentService(ContentMapper contentMapper, UserBrowseRecordMapper browseRecordMapper,
-                          ContentAssembler assembler) {
+    public ContentService(ContentMapper contentMapper, ContentAssembler assembler,
+                          HistoryService historyService, FavoriteService favoriteService) {
         this.contentMapper = contentMapper;
-        this.browseRecordMapper = browseRecordMapper;
         this.assembler = assembler;
+        this.historyService = historyService;
+        this.favoriteService = favoriteService;
     }
 
     public ContentDetailVO getDetail(Long id, Long userId, String sessionId) {
@@ -35,17 +38,29 @@ public class ContentService {
             throw new BusinessException(40401, "内容不存在");
         }
 
-        contentMapper.incrementViewCount(id);
-        writeBrowseRecord(content.getId(), userId, sessionId);
+        // 登录用户优先用 UserContext 中的 userId
+        Long currentUserId = UserContext.get();
+        Long effectiveUserId = currentUserId != null ? currentUserId : userId;
 
-        List<ContentCardVO> related = contentMapper.selectRelated(content.getCategoryId(), content.getId(), 4)
-                .stream().map(assembler::fromEntity).toList();
+        contentMapper.incrementViewCount(id);
+        historyService.recordBrowse(content.getId(), effectiveUserId, sessionId);
+
+        // 登录用户返回真实收藏状态
+        boolean isFavorite = favoriteService.isFavorited(effectiveUserId, content.getId());
+
+        // 相关推荐也带上收藏状态
+        List<Content> relatedEntities = contentMapper.selectRelated(content.getCategoryId(), content.getId(), 4);
+        Set<Long> relatedFavoritedIds = favoriteService.getFavoritedContentIds(effectiveUserId,
+                relatedEntities.stream().map(Content::getId).toList());
+        List<ContentCardVO> related = relatedEntities.stream()
+                .map(c -> assembler.fromEntity(c, relatedFavoritedIds))
+                .toList();
 
         return new ContentDetailVO(
                 content.getId(), content.getContentType(), content.getTitle(), content.getSummary(), content.getBody(),
                 content.getCoverUrl(), content.getSourceName(), content.getSourceUrl(), content.getAuthorName(),
                 contentMapper.selectTagNames(content.getId()), content.getViewCount() + 1,
-                content.getFavoriteCount(), content.getShareCount(), content.getPublishedAt(), false, related
+                content.getFavoriteCount(), content.getShareCount(), content.getPublishedAt(), isFavorite, related
         );
     }
 
@@ -65,16 +80,5 @@ public class ContentService {
                 .getRecords();
         Content item = rows.getFirst();
         return new RandomTipVO(item.getId(), item.getTitle(), item.getSummary());
-    }
-
-    private void writeBrowseRecord(Long contentId, Long userId, String sessionId) {
-        UserBrowseRecord record = new UserBrowseRecord();
-        record.setUserId(userId);
-        record.setSessionId(sessionId);
-        record.setContentId(contentId);
-        record.setBrowseCount(1);
-        record.setFirstBrowsedAt(LocalDateTime.now());
-        record.setLastBrowsedAt(LocalDateTime.now());
-        browseRecordMapper.insert(record);
     }
 }

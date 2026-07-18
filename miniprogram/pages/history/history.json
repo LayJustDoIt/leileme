@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "浏览历史",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "content-card": "/components/content-card/content-card",
+    "loading": "/components/loading/loading",
+    "empty": "/components/empty/empty",
+    "error-state": "/components/error-state/error-state"
+  }
+}

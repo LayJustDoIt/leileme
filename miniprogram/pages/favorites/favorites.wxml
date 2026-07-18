@@ -1,0 +1,57 @@
+<view class="page-wrap">
+  <!-- 头部 -->
+  <view class="head" wx:if="{{list.length > 0 || total > 0}}">
+    <view class="head-meta">共 {{total}} 条收藏</view>
+  </view>
+
+  <!-- 加载 -->
+  <loading wx:if="{{loading}}" text="加载收藏…"></loading>
+
+  <!-- 错误 -->
+  <error-state
+    wx:if="{{error && list.length === 0 && !loading}}"
+    title="收藏加载失败"
+    desc="{{error}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <!-- 列表错误（加载更多失败） -->
+  <error-state
+    wx:if="{{error && list.length > 0 && !loadingMore}}"
+    title="加载失败"
+    desc="{{error}}"
+    bind:retry="onRetry"
+  ></error-state>
+
+  <!-- 空 -->
+  <empty
+    wx:if="{{!loading && !error && list.length === 0}}"
+    icon="❤️"
+    title="还没有收藏内容"
+    desc="在详情页点击收藏，这里就会显示"
+  ></empty>
+
+  <!-- 列表 -->
+  <view class="feed-wrap" wx:if="{{list.length > 0}}">
+    <view class="feed">
+      <view class="fav-item" wx:for="{{list}}" wx:key="id">
+        <content-card
+          item="{{item}}"
+          position="{{index}}"
+          bind:tap="onContentTap"
+        ></content-card>
+        <view
+          class="fav-action {{operatingId === item.id ? 'fav-action-loading' : ''}}"
+          catchtap="onUnfavoriteTap"
+          data-id="{{item.id}}"
+          hover-class="fav-action-hover"
+        >{{operatingId === item.id ? '处理中…' : '取消收藏'}}</view>
+      </view>
+    </view>
+    <loading wx:if="{{loadingMore}}" text="加载更多…"></loading>
+    <view wx:if="{{!hasNext && list.length > 0}}" class="no-more">已经到底啦</view>
+  </view>
+
+  <!-- 底部安全区适配（非 tabBar 页面） -->
+  <view class="safe-area-bottom"></view>
+</view>

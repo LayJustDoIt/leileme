@@ -4,7 +4,9 @@
     "pages/search/search",
     "pages/detail/detail",
     "pages/category/category",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/favorites/favorites",
+    "pages/history/history"
   ],
   "window": {
     "navigationBarBackgroundColor": "#6c63ff",

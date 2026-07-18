@@ -114,6 +114,11 @@ declare namespace WechatMiniprogram {
     stopPullDownRefresh(): void;
     showShareMenu(option: { withShareTicket?: boolean; menus?: string[] }): void;
     vibrateShort(option?: { type?: 'heavy' | 'medium' | 'light' }): void;
+    login(option: {
+      success?: (res: { code: string }) => void;
+      fail?: (err: Wx.GeneralCallbackResult) => void;
+      complete?: () => void;
+    }): void;
   }
 
   namespace App {

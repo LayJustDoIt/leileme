@@ -1,0 +1,65 @@
+.page-wrap {
+  min-height: 100vh;
+  padding-bottom: 0;
+}
+
+/* 头部计数 */
+.head {
+  padding: 24rpx 32rpx 0;
+}
+
+.head-meta {
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+/* 列表 */
+.feed-wrap {
+  padding: 20rpx 32rpx 0;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.fav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.fav-action {
+  align-self: flex-end;
+  font-size: 24rpx;
+  color: var(--muted);
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  border: 1rpx solid var(--line);
+}
+
+.fav-action-hover {
+  background: #fafafe;
+  color: var(--text);
+}
+
+.fav-action-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+/* 非 tabBar 页面底部安全区适配 */
+.safe-area-bottom {
+  width: 100%;
+  height: calc(40rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}

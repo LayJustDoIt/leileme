@@ -45,3 +45,13 @@ management:
 logging:
   level:
     com.leileme: INFO
+
+# 登录与微信配置：真实密钥通过环境变量注入，禁止写入仓库
+auth:
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    app-secret: ${WECHAT_APP_SECRET:}
+    mock-enabled: ${WECHAT_MOCK_ENABLED:false}
+  jwt:
+    secret: ${JWT_SECRET:}
+    expires-in: 604800

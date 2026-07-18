@@ -35,4 +35,12 @@ export const API_PATHS = {
   contents: (id: number | string) => `${API_PREFIX}/contents/${id}`,
   categories: `${API_PREFIX}/categories`,
   randomTip: `${API_PREFIX}/random-tip`,
+  // 登录
+  authWechatLogin: `${API_PREFIX}/auth/wechat-login`,
+  // 收藏
+  contentFavorite: (id: number | string) => `${API_PREFIX}/contents/${id}/favorite`,
+  // 我的
+  meFavorites: `${API_PREFIX}/me/favorites`,
+  meHistory: `${API_PREFIX}/me/history`,
+  meHistoryItem: (contentId: number | string) => `${API_PREFIX}/me/history/${contentId}`,
 } as const;

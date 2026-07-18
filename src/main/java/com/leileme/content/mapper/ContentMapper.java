@@ -24,4 +24,8 @@ public interface ContentMapper extends BaseMapper<Content> {
                                 @Param("limit") int limit);
 
     int incrementViewCount(@Param("id") Long id);
+
+    int incrementFavoriteCount(@Param("id") Long id);
+
+    int decrementFavoriteCount(@Param("id") Long id);
 }

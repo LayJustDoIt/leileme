@@ -1,4 +1,5 @@
 import { env } from '../config/env';
+import { getToken, clearAuth } from './auth';
 
 // 后端统一响应结构
 export interface ApiResponse<T> {
@@ -17,6 +18,8 @@ export interface RequestOptions {
   loadingText?: string;
   showErrorToast?: boolean;
   timeout?: number;
+  // 是否跳过自动注入 Authorization（登录接口本身不需要）
+  skipAuth?: boolean;
 }
 
 // 业务错误（code != 0）
@@ -36,6 +39,14 @@ export class NetError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'NetError';
+  }
+}
+
+// 未登录错误（HTTP 401）
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthError';
   }
 }
 
@@ -65,6 +76,7 @@ export function request<T = any>(opts: RequestOptions): Promise<T> {
     loadingText = '加载中',
     showErrorToast = true,
     timeout,
+    skipAuth = false,
   } = opts;
 
   const fullUrl = /^https?:\/\//.test(url) ? url : `${env.apiBase}${url}`;
@@ -72,6 +84,14 @@ export function request<T = any>(opts: RequestOptions): Promise<T> {
     'Content-Type': 'application/json',
     ...header,
   };
+
+  // 自动注入 Authorization（登录接口本身跳过）
+  if (!skipAuth) {
+    const token = getToken();
+    if (token) {
+      finalHeader['Authorization'] = `Bearer ${token}`;
+    }
+  }
 
   if (showLoading) showLoadingIfNeed(loadingText);
 
@@ -85,6 +105,15 @@ export function request<T = any>(opts: RequestOptions): Promise<T> {
       success(res) {
         const statusCode = res.statusCode;
         const body = res.data as ApiResponse<T>;
+
+        // 401：清除失效 Token，不自动重试
+        if (statusCode === 401) {
+          clearAuth();
+          const msg = (body && body.message) || '登录已过期，请重新登录';
+          if (showErrorToast) wx.showToast({ title: msg, icon: 'none' });
+          reject(new AuthError(msg));
+          return;
+        }
 
         if (statusCode < 200 || statusCode >= 300) {
           const msg = `网络异常（${statusCode}）`;
@@ -123,4 +152,8 @@ export function get<T = any>(url: string, data?: Record<string, any>, opts?: Par
 
 export function post<T = any>(url: string, data?: Record<string, any>, opts?: Partial<RequestOptions>) {
   return request<T>({ url, method: 'POST', data, ...opts });
+}
+
+export function del<T = any>(url: string, data?: Record<string, any>, opts?: Partial<RequestOptions>) {
+  return request<T>({ url, method: 'DELETE', data, ...opts });
 }

@@ -1,0 +1,22 @@
+# 开发环境配置示例。复制为 application-dev.yml 后填写真实值。
+# 注意：application-dev.yml 已在 .gitignore 中，不会被提交。
+#
+# 启用方式：spring.profiles.active=dev 或 --spring.profiles.active=dev
+
+auth:
+  wechat:
+    # 方式一：mock 登录（开发推荐）
+    # 设置 mock-enabled: true 后，可用测试 code（如 dev-user-001）直接登录，
+    # 相同 code 对应同一模拟 openid，无需真实微信 AppID/Secret。
+    mock-enabled: true
+    app-id: ""
+    app-secret: ""
+
+    # 方式二：真实微信登录（需在小程序后台配置后端域名）
+    # mock-enabled: false
+    # app-id: "你的小程序 AppID"
+    # app-secret: "你的小程序 AppSecret"
+  jwt:
+    # 开发环境可用任意 32 字符以上字符串，生产必须用强随机密钥
+    secret: "dev-only-jwt-secret-replace-in-production-32bytes!"
+    expires-in: 604800

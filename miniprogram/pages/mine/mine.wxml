@@ -2,12 +2,15 @@
   <!-- 用户头部 -->
   <view class="hero">
     <view class="hero-card">
-      <view class="avatar">🫠</view>
+      <view class="avatar">{{loggedIn ? '😊' : '🫠'}}</view>
       <view class="user-info">
-        <view class="nickname">访客用户</view>
-        <view class="sub">登录功能即将上线</view>
+        <view class="nickname">{{loggedIn ? (user.nickname || '累了么用户') : '访客用户'}}</view>
+        <view class="sub">{{loggedIn ? '用户ID：' + user.id : '登录后可收藏与查看历史'}}</view>
       </view>
-      <view class="login-btn">登录</view>
+      <view wx:if="{{!loggedIn}}" class="login-btn {{loginLoading ? 'login-btn-loading' : ''}}" bindtap="onLoginTap">
+        {{loginLoading ? '登录中...' : '微信登录'}}
+      </view>
+      <view wx:else class="logout-btn" bindtap="onLogoutTap">退出</view>
     </view>
   </view>
 

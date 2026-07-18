@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(ex.getCode(), ex.getMessage());
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiResponse<Void> handleUnauthorized(UnauthorizedException ex) {
+        return ApiResponse.error(ex.getCode(), ex.getMessage());
+    }
+
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Void> handleValidation(Exception ex) {

@@ -67,4 +67,12 @@
     <update id="incrementViewCount">
         UPDATE content SET view_count = view_count + 1 WHERE id = #{id}
     </update>
+
+    <update id="incrementFavoriteCount">
+        UPDATE content SET favorite_count = favorite_count + 1 WHERE id = #{id}
+    </update>
+
+    <update id="decrementFavoriteCount">
+        UPDATE content SET favorite_count = GREATEST(favorite_count - 1, 0) WHERE id = #{id}
+    </update>
 </mapper>
