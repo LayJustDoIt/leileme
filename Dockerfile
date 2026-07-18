@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /workspace
 # 注入干净的 Maven settings.xml，覆盖全局配置中可能存在的内网镜像（如 wpg-maven-public），
@@ -17,9 +18,13 @@ RUN mkdir -p /root/.m2 && printf '%s\n' \
   '    </mirrors>' \
   '</settings>' > /root/.m2/settings.xml
 COPY pom.xml .
-RUN mvn -q -DskipTests dependency:go-offline
+# 使用 BuildKit bind mount 复用宿主机 maven 本地仓库缓存，避免 Docker 构建时重新下载依赖
+# macOS Docker Desktop 已将 /Users 共享到虚拟机，可直接 bind mount
+RUN --mount=type=bind,source=/Users/liushaowu/.m2/repository,target=/root/.m2/repository \
+    mvn -q -DskipTests dependency:go-offline || true
 COPY src ./src
-RUN mvn -q -DskipTests package
+RUN --mount=type=bind,source=/Users/liushaowu/.m2/repository,target=/root/.m2/repository \
+    mvn -q -DskipTests package
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app

@@ -30,7 +30,10 @@ services:
       retries: 10
 
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    image: leileme-backend:local
     container_name: leileme-backend
     environment:
       DB_HOST: mysql

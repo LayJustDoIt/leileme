@@ -76,3 +76,15 @@ feedback:
   min-interval-seconds: ${FEEDBACK_MIN_INTERVAL:60}
   # 单日每用户/会话最大提交数
   daily-limit: ${FEEDBACK_DAILY_LIMIT:10}
+
+# 管理后台配置：管理员 Token 与微信用户 Token 完全分开
+# 生产环境必须通过环境变量覆盖 ADMIN_JWT_SECRET 与默认管理员密码
+admin:
+  jwt:
+    secret: ${ADMIN_JWT_SECRET:leileme-admin-jwt-secret-change-me-2026-min32bytes!!}
+    expires-in: ${ADMIN_JWT_EXPIRES_IN:86400}
+  bootstrap:
+    enabled: ${ADMIN_BOOTSTRAP_ENABLED:true}
+    username: ${ADMIN_BOOTSTRAP_USERNAME:admin}
+    password: ${ADMIN_BOOTSTRAP_PASSWORD:admin123}
+    display-name: ${ADMIN_BOOTSTRAP_DISPLAY_NAME:超级管理员}

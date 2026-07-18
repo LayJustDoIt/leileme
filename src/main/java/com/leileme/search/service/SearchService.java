@@ -48,17 +48,21 @@ public class SearchService {
     public SearchResultVO search(String rawKeyword, String contentType, Long categoryId,
                                  long page, long size, Long userId, String sessionId) {
         long started = System.currentTimeMillis();
-        String keyword = normalize(rawKeyword);
         page = Math.max(1, page);
         size = Math.min(50, Math.max(1, size));
         String searchRequestId = "SR" + UUID.randomUUID().toString().replace("-", "");
+
+        // 分类浏览模式：categoryId 有值且 keyword 为空时，按分类严格过滤，不要求关键词，结果为空不兜底
+        boolean categoryBrowseMode = categoryId != null && (rawKeyword == null || rawKeyword.isBlank());
+        String keyword = categoryBrowseMode ? null : normalize(rawKeyword);
 
         Page<SearchContentRow> pageRequest = new Page<>(page, size);
         IPage<SearchContentRow> result = contentMapper.selectSearchPage(pageRequest, keyword, blankToNull(contentType), categoryId);
         boolean fallback = false;
         List<ContentCardVO> cards = result.getRecords().stream().map(assembler::fromSearchRow).toList();
 
-        if (cards.isEmpty()) {
+        // 兜底推荐只用于关键词搜索模式（无 categoryId），不允许用于具体分类查询
+        if (cards.isEmpty() && !categoryBrowseMode) {
             fallback = true;
             List<Content> fallbackContents = contentMapper.selectList(Wrappers.lambdaQuery(Content.class)
                     .eq(Content::getStatus, 1)
@@ -85,6 +89,7 @@ public class SearchService {
         record.setResultCount(Math.toIntExact(result.getTotal()));
         record.setResponseTimeMs((int) (System.currentTimeMillis() - started));
         record.setCreatedAt(LocalDateTime.now());
+        // 分类浏览模式下 keyword 为 null，search_record.normalized_keyword 允许 NULL
         searchRecordMapper.insert(record);
 
         return new SearchResultVO(searchRequestId, keyword, page, size, result.getTotal(),

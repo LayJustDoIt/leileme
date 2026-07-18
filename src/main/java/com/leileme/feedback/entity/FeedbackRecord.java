@@ -19,4 +19,9 @@ public class FeedbackRecord {
     private String pagePath;
     private LocalDateTime submittedAt;
     private LocalDateTime createdAt;
+    // 管理后台扩展字段
+    private String status;
+    private String adminNote;
+    private Long handledBy;
+    private LocalDateTime handledAt;
 }

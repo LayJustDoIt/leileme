@@ -16,7 +16,7 @@ public class SearchController {
 
     @GetMapping
     public ApiResponse<SearchResultVO> search(
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String contentType,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(defaultValue = "1") long page,

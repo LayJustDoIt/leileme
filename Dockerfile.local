@@ -1,0 +1,7 @@
+# 简化版 Dockerfile：直接使用本地构建好的 jar，避免 Docker 构建时下载 Maven 依赖
+# 使用方式：docker build -f Dockerfile.local -t leileme-backend:local . && docker-compose up -d backend
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY target/leileme-backend-0.1.0-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=75","-jar","/app/app.jar"]

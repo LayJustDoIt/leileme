@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS content_category (
 CREATE TABLE IF NOT EXISTS content (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     content_type VARCHAR(30) NOT NULL,
-    category_id BIGINT NOT NULL,
+    category_id BIGINT DEFAULT NULL,
     title VARCHAR(255) NOT NULL,
     subtitle VARCHAR(255) DEFAULT NULL,
     summary VARCHAR(1000) DEFAULT NULL,
@@ -136,8 +136,8 @@ CREATE TABLE IF NOT EXISTS search_record (
     request_id VARCHAR(64) NOT NULL,
     user_id BIGINT DEFAULT NULL,
     session_id VARCHAR(100) DEFAULT NULL,
-    original_keyword VARCHAR(255) NOT NULL,
-    normalized_keyword VARCHAR(255) NOT NULL,
+    original_keyword VARCHAR(255) DEFAULT NULL,
+    normalized_keyword VARCHAR(255) DEFAULT NULL,
     content_type VARCHAR(30) DEFAULT NULL,
     category_id BIGINT DEFAULT NULL,
     result_count INT NOT NULL DEFAULT 0,
@@ -201,6 +201,27 @@ CREATE TABLE IF NOT EXISTS feedback_record (
     page_path VARCHAR(255) DEFAULT NULL,
     submitted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- 管理后台扩展字段：处理状态、管理员备注、处理人、处理时间
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    admin_note VARCHAR(1000) DEFAULT NULL,
+    handled_by BIGINT DEFAULT NULL,
+    handled_at DATETIME DEFAULT NULL,
     KEY idx_feedback_user_time (user_id, submitted_at),
-    KEY idx_feedback_session_time (session_id, submitted_at)
+    KEY idx_feedback_session_time (session_id, submitted_at),
+    KEY idx_feedback_status (status, submitted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 反馈记录表幂等迁移：v0.1 -> v0.2 升级 feedback_record 表（CREATE TABLE IF NOT EXISTS 不会补字段）
+-- 使用 information_schema + PREPARE/EXECUTE 保证重复执行幂等
+SET @feedback_status_exists := (
+    SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'feedback_record'
+      AND COLUMN_NAME = 'status'
+);
+SET @feedback_migrate_sql := IF(@feedback_status_exists = 0,
+    'ALTER TABLE feedback_record ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT ''PENDING'', ADD COLUMN admin_note VARCHAR(1000) DEFAULT NULL, ADD COLUMN handled_by BIGINT DEFAULT NULL, ADD COLUMN handled_at DATETIME DEFAULT NULL, ADD KEY idx_feedback_status (status, submitted_at)',
+    'SELECT 1');
+PREPARE feedback_migrate_stmt FROM @feedback_migrate_sql;
+EXECUTE feedback_migrate_stmt;
+DEALLOCATE PREPARE feedback_migrate_stmt;

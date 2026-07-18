@@ -6,18 +6,25 @@
         SELECT
             c.id, c.content_type, c.category_id, c.title, c.summary, c.cover_url,
             c.source_name, c.hot_score, c.view_count, c.favorite_count, c.published_at,
-            (
-                CASE
-                    WHEN LOWER(c.title) = #{keyword} THEN 200
-                    WHEN LOWER(c.title) LIKE CONCAT(#{keyword}, '%') THEN 150
-                    WHEN LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%') THEN 100
-                    ELSE 0
-                END
-                + CASE WHEN LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 70 ELSE 0 END
-                + CASE WHEN LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 40 ELSE 0 END
-                + CASE WHEN c.is_top = 1 THEN 30 ELSE 0 END
-                + LEAST(c.hot_score, 100)
-            ) AS relevance_score
+            <choose>
+                <when test="keyword != null and keyword != ''">
+                    (
+                        CASE
+                            WHEN LOWER(c.title) = #{keyword} THEN 200
+                            WHEN LOWER(c.title) LIKE CONCAT(#{keyword}, '%') THEN 150
+                            WHEN LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%') THEN 100
+                            ELSE 0
+                        END
+                        + CASE WHEN LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 70 ELSE 0 END
+                        + CASE WHEN LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%') THEN 40 ELSE 0 END
+                        + CASE WHEN c.is_top = 1 THEN 30 ELSE 0 END
+                        + LEAST(c.hot_score, 100)
+                    )
+                </when>
+                <otherwise>
+                    (CASE WHEN c.is_top = 1 THEN 30 ELSE 0 END + LEAST(c.hot_score, 100))
+                </otherwise>
+            </choose> AS relevance_score
         FROM content c
         LEFT JOIN content_category cc ON cc.id = c.category_id
         WHERE c.status = 1
@@ -28,20 +35,22 @@
           <if test="categoryId != null">
               AND c.category_id = #{categoryId}
           </if>
-          AND (
-              LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%')
-              OR LOWER(COALESCE(c.subtitle, '')) LIKE CONCAT('%', #{keyword}, '%')
-              OR LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%')
-              OR LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%')
-              OR LOWER(COALESCE(cc.category_name, '')) LIKE CONCAT('%', #{keyword}, '%')
-              OR EXISTS (
-                  SELECT 1
-                  FROM content_tag_relation ctr
-                  JOIN content_tag ct ON ct.id = ctr.tag_id AND ct.status = 1
-                  WHERE ctr.content_id = c.id
-                    AND LOWER(ct.tag_name) LIKE CONCAT('%', #{keyword}, '%')
+          <if test="keyword != null and keyword != ''">
+              AND (
+                  LOWER(c.title) LIKE CONCAT('%', #{keyword}, '%')
+                  OR LOWER(COALESCE(c.subtitle, '')) LIKE CONCAT('%', #{keyword}, '%')
+                  OR LOWER(COALESCE(c.summary, '')) LIKE CONCAT('%', #{keyword}, '%')
+                  OR LOWER(COALESCE(c.search_keywords, '')) LIKE CONCAT('%', #{keyword}, '%')
+                  OR LOWER(COALESCE(cc.category_name, '')) LIKE CONCAT('%', #{keyword}, '%')
+                  OR EXISTS (
+                      SELECT 1
+                      FROM content_tag_relation ctr
+                      JOIN content_tag ct ON ct.id = ctr.tag_id AND ct.status = 1
+                      WHERE ctr.content_id = c.id
+                        AND LOWER(ct.tag_name) LIKE CONCAT('%', #{keyword}, '%')
+                  )
               )
-          )
+          </if>
         ORDER BY relevance_score DESC, c.published_at DESC
     </select>
 
